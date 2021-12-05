@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { SideBar } from './components/SideBar';
 import { Content } from './components/Content';
@@ -51,21 +51,29 @@ export function App() {
     })
   }, [selectedGenreId]);
 
-  function handleClickButton(id: number) {
+  const memorizeHandleClickButton = useCallback((id: number) => {
     setSelectedGenreId(id);
-  }
+  }, [])
+
+  const moviesFormat = useMemo(() => {
+    return movies
+  }, [selectedGenreId, movies])
+
+  const genresFormat = useMemo(() => {
+    return genres
+  }, [selectedGenreId, genres])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
       <SideBar
-        genres={genres}
+        genres={genresFormat}
         selectedGenreId={selectedGenreId}
-        buttonClickCallback={handleClickButton}
+        buttonClickCallback={memorizeHandleClickButton}
       />
 
       <Content
         selectedGenre={selectedGenre}
-        movies={movies}
+        movies={moviesFormat}
       />
     </div>
   )
